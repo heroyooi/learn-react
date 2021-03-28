@@ -156,3 +156,40 @@ const SignUp = loadable(() => import('@pages/SignUp'));
 ```command
 npm i @emotion/react @emotion/styled
 ```
+
+- 비동기 요청은 axios
+
+```command
+npm i axios
+```
+
+- CORS 에러 처리
+
+  - 백엔드 개발자에게 보여준다.
+  - 프론트 개발자가 스스로 해결한다.
+
+  - webpack.config.ts
+
+```ts
+const config: webpack.Configuration = {
+  devServer: {
+    proxy: {
+      '/api/': {
+        target: 'http://localhost:3095',
+        changeOrigin: true,
+      },
+    },
+  },
+};
+```
+
+- 프론트, 백엔드 둘 다 localhost일 때 가능하다.
+- 둘 다 localhost 일 경우 proxy로 cors 에러를 피해갈 수 있다.
+
+- 로그인 한 데이터를 저장해야한다.
+- SWR를 사용해서 전역적으로 상태를 관리할 수 있다.
+  - 요청을 보내서 받아온 데이터를 저장한다.
+
+```command
+npm i swr
+```
