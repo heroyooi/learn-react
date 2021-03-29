@@ -193,3 +193,61 @@ const config: webpack.Configuration = {
 ```command
 npm i swr
 ```
+
+- swr 사용 예제
+
+- @pages/LogIn/index.tsx
+
+```tsx
+import useSWR from 'swr';
+
+const LogIn = () => {
+  const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+
+  const onSubmit = useCallback((e) => {
+    e.preventDefault();
+    axios.post('/api/users/login', { email, password }, { withCredentials: true })
+      .then((response) => {
+        revalidate(); // 서버에 요청을 보내서 내 정보를 가져온다
+        mutate(response.data, false); // 기존에 갖고있던 내 정보를 데이터에 넣는다. (서버에 요청을 안보냄)
+      })
+      .catch(error) => {});
+  }, []);
+
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
+
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
+};
+```
+
+- revalidate: 서버로 요청을 다시 보내서, 데이터를 다시 가져오는 것
+- mutate: 서버로 요청을 보내지 않고, 데이터를 수정하는 것
+  - 나중에 서버에 요청을 보내 점검을 하긴 한다.
+  - mutate의 2번째 인자 값을 false로 설정하면 진짜로 서버에 요청을 안 보낸다.
+    - 인스타의 좋아요가 좋은 예시, 좋아요를 누르자마자 서버를 거치지 않고 하트가 활성화가 된다.
+    - 그게 바로 mutate의 효과이다.
+    - OPTIMISTIC UI (긍정적, 낙관적 UI): 내가 보내는 요청이 성공할 것이라고 낙관하고 활성화시킨다. 그 다음 점검하겠다. 점검을 했는데 안됐으면 활성화를 비활성화 시킨다.
+    - PESSIMISTIC UI (비관적 UI): 기본적으로 비관적 UI다.
+
+```tsx
+import useSWR, { mutate } from 'swr';
+
+const Workspace: FC = () => {
+  const onLogout = useCallback(() => {
+    axios
+      .post('/api/users/logout', null, {
+        withCredentials: true,
+      })
+      .then(() => {
+        mutate('/api/users', false, false);
+      });
+  }, []);
+};
+```
+
+- 위와같이 범용적으로 사용할 수 있는 mutate도 있다.
+- mutate 안에 키를 같이 넣어주고 false를 적어줘야한다.
