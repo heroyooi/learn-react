@@ -32,7 +32,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
       <div>
         <label htmlFor="user-password">비밀번호</label>
         <br />
-        <Input name="user-password" value={password} onChange={onChangePassword} required />
+        <Input name="user-password" value={password} onChange={onChangePassword} type="password" required />
       </div>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit" loading={false}>
