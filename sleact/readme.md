@@ -279,3 +279,7 @@ const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/us
 - 요청은 같게 보내면서 데이터는 다르게 저장
 
 ## ch3
+
+```command
+npm i gravatar
+```
