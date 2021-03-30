@@ -202,7 +202,9 @@ npm i swr
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+  const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher, {
+    dedupingInterval: 2000, // 2초, 캐쉬 유지 기간(2초 동안 요청을 여러번 보내도 서버에는 한번만 요청 보내고, 처음에 성공한 데이터를 그대로 가져오겠다.)
+  });
 
   const onSubmit = useCallback((e) => {
     e.preventDefault();
@@ -251,3 +253,29 @@ const Workspace: FC = () => {
 
 - 위와같이 범용적으로 사용할 수 있는 mutate도 있다.
 - mutate 안에 키를 같이 넣어주고 false를 적어줘야한다.
+
+- swr이 항상 비동기 요청이랑만 관련 있는 것은 아니다.
+
+```tsx
+const { data } = useSWR('hello', (key) => {
+  localStorage.setItem('data', key);
+  return localStorage.getItem('data');
+});
+```
+
+- fethcer와 key를 선언하는대로 알아서 관리를 해준다.
+- 로컬 스토리지 값을 가져올 수도 있다.
+- 이렇게 swr이 전역 데이터 저장소 역할을 할 수 있다.
+
+```tsx
+const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/users', fetcher, {
+  dedupingInterval: 2000, // 2초
+});
+const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/users#123', fetcher2, {
+  dedupingInterval: 2000,
+});
+```
+
+- 요청은 같게 보내면서 데이터는 다르게 저장
+
+## ch3
