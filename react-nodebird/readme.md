@@ -29,6 +29,8 @@ npm i antd styled-components @ant-design/icons
 npm i next-redux-wrapper
 npm i redux react-redux
 npm i redux-devtools-extension
+npm i react-slick
+npm i styled-components
 ```
 
 - 비동기는 요청, 성공, 실패 3단계로 나뉘어진다.
