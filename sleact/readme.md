@@ -281,5 +281,5 @@ const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/us
 ## ch3
 
 ```command
-npm i gravatar
+npm i gravatar @types/gravatar
 ```
