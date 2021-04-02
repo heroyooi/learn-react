@@ -173,3 +173,10 @@ l.next(); // 위 logIn 함수의 2 실행됨
   - 프론트 서버에서만 위와 같이 실행된다.
   - 동시에 두 번 요청을 보냈다고 생각했을 때, takeLatest를 사용하면 요청은 두번가고, 응답은 한번만 온다. 요청까지는 취소를 할 수가 없다.
   - 요청이 한번에 너무 많이 되면 throttle을 써서 요청이 안가도록 막는 것이 좋다.
+
+- eslint 점검
+
+```command
+npm i -D babel-eslint eslint-config-airbnb eslint-plugin-import
+npm i -D eslint-plugin-react-hooks eslint-plugin-jsx-a11y
+```
