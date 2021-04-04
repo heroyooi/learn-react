@@ -180,3 +180,9 @@ l.next(); // 위 logIn 함수의 2 실행됨
 npm i -D babel-eslint eslint-config-airbnb eslint-plugin-import
 npm i -D eslint-plugin-react-hooks eslint-plugin-jsx-a11y
 ```
+
+- 더미데이터
+
+```command
+npm i shortid faker
+```
