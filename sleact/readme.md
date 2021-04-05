@@ -283,3 +283,36 @@ const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/us
 ```command
 npm i gravatar @types/gravatar
 ```
+
+- 버튼 클릭 시 에러 처리를 위해 토스트 팝업 설치
+
+```command
+npm i react-toastify
+```
+
+- 자주나는 에러 설명 (Invalid hook call.)
+
+  - return문 아래에 hooks가 있을 경우
+  - 반복문, if문 안에 hooks를 넣었을 때
+
+- 주소 자체가 데이터를 저장하는 역할을 할 수 있다.
+
+```tsx
+import { useParams } from 'react-router';
+
+const CreateChannelModal: VFC<Props> = ({ show, onCloseModal }) => {
+  const [newChannel, onChangeNewChannel] = useInput('');
+  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+  const onCreateChannel = useCallback(() => {
+    axios.post(
+      `/api/workspaces/${workspace}/channels`, // 어느 workspace에 채널을 만들 것인지 주소를 통해 알 수 있음
+      {
+        name: newChannel, // 새롭게 추가하는 채널 이름
+      },
+      {
+        withCredentials: true, // 쿠키가 전달 -> 누가 생성하는지 알 수 있음
+      },
+    );
+  }, [newChannel]);
+};
+```
