@@ -318,3 +318,17 @@ const CreateChannelModal: VFC<Props> = ({ show, onCloseModal }) => {
 ```
 
 ## ch4
+
+- Textarea 자동으로 높이 조절 및 키 이벤트
+
+```command
+npm i autosize
+npm i -D @types/autosize
+```
+
+## ch5
+
+```command
+npm i react-custom-scrollbars
+npm i react-mentions
+```

@@ -185,8 +185,7 @@ npm i -D eslint-plugin-react-hooks eslint-plugin-jsx-a11y
 
 ```command
 npm i shortid faker
-```
-
-```command
 npm i immer
 ```
+
+## ch5
