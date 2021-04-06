@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { Success, Form, Error, Label, Input, LinkContainer, Button, Header } from './styles';
 
 const SignUp = () => {
-  const { data, error, revalidate } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error, revalidate } = useSWR('/api/users', fetcher);
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -39,7 +39,7 @@ const SignUp = () => {
         setSignUpError('');
         setSignUpSuccess(false);
         axios
-          .post('http://localhost:3095/api/users', {
+          .post('/api/users', {
             email,
             nickname,
             password,

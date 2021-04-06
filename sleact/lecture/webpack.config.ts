@@ -76,12 +76,12 @@ const config: webpack.Configuration = {
     historyApiFallback: true, // react router, false로 만들면 새로고침 시 라우터를 인식하지 못한다.
     port: 3090,
     publicPath: '/dist/',
-    // proxy: {
-    //   '/api/': {
-    //     target: 'http://localhost:3095',
-    //     changeOrigin: true,
-    //   },
-    // },
+    proxy: {
+      '/api/': {
+        target: 'http://localhost:3095',
+        changeOrigin: true,
+      },
+    },
   },
 };
 
