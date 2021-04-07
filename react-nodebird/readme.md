@@ -220,6 +220,57 @@ app.get('/', (req, res) => {
   - REST API를 지키기 어렵다. => 게시글 가져오면서 조회수 1을 올릴 경우 get을 써야할 지, patch를 해야할 지 난해하다.
   - 애매하면 post를 쓰면 된다.
 
+```command
+npm i sequelize sequelize-cli mysql2
+```
+
+- mysql2: node와 mysql을 연결해주는 드라이버(이 모듈 자체가 mysql은 아니다)
+
+- 시퀄라이즈 초기화를 시킨다.
+
+```command
+npx sequelize init
+```
+
+- 파일이 생성되면 config/config.json 파일의 정보를 맞게 수정해준다.
+- models/index.js 파일 내용을 수정해준다.
+- models 폴더에 모델들을 정의해준다. (comment, hashtag, image, post, user)
+
+- models/user.js
+
+```js
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define(
+    'User', // MySQL에는 users 테이블 생성 (시퀄라이즈와 MySQL간의 규칙)
+    {
+      // id가 기본적으로 들어있다.
+      email: {
+        type: DataTypes.STRING(30), // STRING, TEXT, BOOLEAN, INTEGER(정수), FLOAT(실수), DATETIME
+        allowNull: false, // 필수
+        unique: true, // 고유한 값
+      },
+      nickname: {
+        type: DataTypes.STRING(30),
+        allowNull: false, // 필수
+      },
+      password: {
+        type: DataTypes.STRING(100),
+        allowNull: false, // 필수
+      },
+    },
+    {
+      charset: 'utf8',
+      collate: 'utf8_general_ci', // 한글 저장
+    },
+  );
+  User.associate = (db) => {};
+  return User;
+};
+```
+
+- 시퀄라이즈에서는 mysql의 테이블을 모델이라고 부른다.
+- 모델들 간의 관계를 정의 해줘야한다.
+
 ## 강좌
 
-- 리액트 노드버드 5-4
+- 리액트 노드버드 5-6
