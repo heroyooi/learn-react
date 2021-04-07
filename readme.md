@@ -1,7 +1,7 @@
 # Learn React
 
-- React-Nodebird: next + redux + redux-saga로 sns 구현
-- Sleact: react + typescript로 슬랙클론 구현
+- react-nodebird: redux + next + redux-saga로 sns 구현
+- sleact: react + typescript로 슬랙 구현
 
 ## MySQL 설치
 
@@ -9,8 +9,3 @@
 - 위 링크로 들어가서 첫번째 용량 적은 파일(2.4M)이 아닌 2번째 용량 큰 파일(422.4M)로 설치
 - [MySQL 커뮤니티 설치](https://thebook.io/080229/ch07/02/01-01)
 - 위 링크 보고 순서대로 설치
-
-## 강좌
-
-- 리액트 노드버드 5-1
-- 슬랙클론코딩 4일차 43:00

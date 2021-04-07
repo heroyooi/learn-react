@@ -328,7 +328,123 @@ npm i -D @types/autosize
 
 ## ch5
 
+- nest와 socket-io 3버전이 호환이 되지 않아서 2버전으로 설치
+- backend 의 socket-io 버전도 2버전이어야한다.
+
 ```command
-npm i react-custom-scrollbars
-npm i react-mentions
+npm i socket.io-client@2
+npm i -D @types/socket.io-client
 ```
+
+- socket.io는 전역적인 특징을 띈다.
+- 슬랙의 workspace는 namespace, 슬랙의 channel이 room
+- 네임스페이스, 룸은 원래 웹소켓에는 없는 내용인데 socket.io에서 편하게 쓰라고 제공해주는 것
+
+- useSocket.ts (socket.io 적용 예)
+
+```ts
+import io from 'socket.io-client';
+
+const useSocket = (workspace?: string): [SocketIOClient.Socket | undefined, () => void] => {
+  const disconnect = useCallback(() => {
+    if (workspace) {
+      sockets[workspace].disconnect();
+      delete sockets[workspace];
+    }
+  }, [workspace]);
+  if (!workspace) {
+    return [undefined, disconnect];
+  }
+  if (!sockets[workspace]) {
+    sockets[workspace] = io.connect(`${backUrl}/ws-${workspace}`);
+  }
+
+  return [sockets[workspace], disconnect];
+};
+```
+
+- layouts/Workspace/index.tsx (socket.io 적용 예)
+
+```tsx
+const Workspace: VFC = () => {
+  const [socket, disconnect] = useSocket(workspace);
+
+  useEffect(() => {
+    if (channelData && userData && socket) {
+      console.log(socket);
+      socket?.emit('login', { id: userData.id, channels: channelData.map((v) => v.id) });
+    }
+  }, [socket, channelData, userData]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, [workspace, disconnect]);
+};
+```
+
+```command
+npm i react-custom-scrollbars dayjs react-mentions
+npm i -D @types/react-custom-scrollbars @types/react-mentions
+```
+
+- @emotion/styled 에서 변수 사용하는 예제
+
+- ChatBox/index.tsx
+
+```tsx
+<EachMention focus={focus}>
+  <img src={''} alt={''} />
+  <span>{highlightedDisplay}</span>
+</EachMention>
+```
+
+- styles.tsx
+
+```tsx
+export const EachMention = styled.button<{ focus: boolean }>`
+  padding: 4px 20px;
+  ${({ focus }) =>
+    focus &&
+    `
+    background: #1264a3;
+  `};
+`;
+```
+
+```command
+npm i regexify-string
+```
+
+- 정규 표현식 설명
+
+  - // : 하나만 찾겠다.
+  - //g : 모두 찾겠다.
+  - \ (이스케이프) : 특수 기호를 무력화해주는 역할
+  - . : 모든 글짜
+  - .+ : 모든 글짜를 1개 이상
+  - ? : 0개 이상
+  - +? : 최대한 조금 (+만 있으면 최대한 많이)
+  - \d : 숫자
+  - \d+ : 숫자 1개 이상
+  - | : 또는
+  - \n : 줄바꿈
+
+- regexify-string 사용 예제 (텍스트의 \n을 찾아서 br태그로 바꾸는 경우)
+
+```tsx
+const result = regexifyString({
+  input: data.content,
+  pattern: /\n/g,
+  decorator(match, index) {
+    return <br key={index} />;
+  },
+});
+
+return result;
+```
+
+## 강좌
+
+- 슬랙클론코딩 5일차 02:15:00
