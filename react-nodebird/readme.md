@@ -2,7 +2,7 @@
 
 ## ch1
 
-- 초기 세팅
+- 프론트 서버 초기 세팅
 - eslint 설정
 
 ```command
@@ -190,6 +190,36 @@ npm i immer
 
 ## ch5
 
+- 백엔드 서버 초기 세팅
+
+```command
+npm init
+npm i express
+```
+
+```js
+const express = require('express');
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('hello express');
+});
+```
+
+- app의 메서드
+
+  - app.get : 가져오다
+  - app.post : 생성하다
+  - app.put : 전체 수정
+  - app.delete : 제거
+  - app.patch : 부분 수정
+  - app.options : 찔러보기 (서버야 요청 보내도 되니?)
+  - app.head : 헤더만 가져오기(원래는 헤더/바디 둘 다 온다)
+
+  - REST API를 지키기 어렵다. => 게시글 가져오면서 조회수 1을 올릴 경우 get을 써야할 지, patch를 해야할 지 난해하다.
+  - 애매하면 post를 쓰면 된다.
+
 ## 강좌
 
-- 리액트 노드버드 5-1
+- 리액트 노드버드 5-4
