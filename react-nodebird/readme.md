@@ -271,6 +271,98 @@ module.exports = (sequelize, DataTypes) => {
 - 시퀄라이즈에서는 mysql의 테이블을 모델이라고 부른다.
 - 모델들 간의 관계를 정의 해줘야한다.
 
+### 1대다 관계
+
+- 1: hasMany, 다: belongsTo(본문과 댓글)
+- models/post.js, comment.js
+
+```js
+Post.associate = (db) => {
+  db.Post.hasMany(db.Comment);
+};
+
+Comment.associate = (db) => {
+  db.Comment.belongsTo(db.Post);
+};
+```
+
+- 한 본문이 여러 댓글을 가질 수 있다.
+- belongsTo는 PostId라는 컬럼을 만들어준다.
+
+### 다대다 관계
+
+- 둘 다 belongsToMany(본문과 해시태그)
+- models/post.js, hashtag.js
+
+```js
+Post.associate = (db) => {
+  db.Post.belongsToMany(db.Hashtag);
+};
+
+Hashtag.associate = (db) => {
+  db.Hashtag.belongsToMany(db.Post);
+};
+```
+
+- 여러 게시글이 여러 해시태그를 가질 수 있다.
+- belongsToMany는 좀 특별하다. 중간 테이블이 하나 생긴다. PostHashtag 시퀄라이즈가 알아서 만들어준다.
+- HashtagId, PostId가 짝지어진다. 그래서 해시태그로 본문 검색이 가능해진다.
+
+- 유저와 좋아요
+
+```js
+Post.associate = (db) => {
+  db.Post.belongsToMany(db.User, { through: 'Like' });
+};
+
+User.associate = (db) => {
+  db.User.belongsToMany(db.Post, { through: 'Like' });
+};
+```
+
+- 중간 테이블명이 through로 설정한 Like가 된다.
+- 만약 따로 설정을 하지 않으면 PostUser가 된다. 의미를 알 수 없게됨
+
+### 1대1 관계
+
+- hasOne, belongsTo (유저와 유저 정보)
+- belongsTo가 있는 곳에 UserId 컬럼이 생긴다.
+
+### 기타
+
+- 관계가 헷갈리는 경우 as를 사용해 별칭을 지어줄 수 있다.
+
+```js
+Post.associate = (db) => {
+  db.Post.belongsTo(db.User);
+  db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });
+};
+```
+
+- 나중에 as에 따라서 post.getLikers처럼 게시글 좋아요 누른 사람을 가져올 수 있다.
+
+- 같은 모델간에도 관계가 있을 수 있다. (팔로잉, 팔로워)
+
+```js
+User.associate = (db) => {
+  db.User.belongsToMany(db.User, { throught: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });
+  db.User.belongsToMany(db.User, { throught: 'Follow', as: 'Followings', foreignKey: 'FollowerId' });
+};
+```
+
+- 같은 모델에서 다대다 정의를 할 경우 foreignKey가 생긴다. foreignKey는 반대로 적어줘야한다.
+- foreignKey는 컬럼명을 바꿔주는 것이다. 위 설정하지 않으면 UserId 이런식으로 생성된다.
+
+- 같은 모델이서 1대다 정의를 할 수 있다. (리트윗)
+
+```js
+Post.associate = (db) => {
+  db.Post.belongsTo(db.Post, { as: 'Retweet' });
+};
+```
+
+- Post 모델 컬럼에 RetweetId가 생성된다.
+
 ## 강좌
 
-- 리액트 노드버드 5-6
+- 리액트 노드버드 5-7
