@@ -445,6 +445,12 @@ const result = regexifyString({
 return result;
 ```
 
+- 리버스 인피니티 스크롤링
+
+```command
+
+```
+
 ## 강좌
 
-- 슬랙클론코딩 5일차 02:15:00
+- 슬랙클론코딩 5일차 02:40:30
