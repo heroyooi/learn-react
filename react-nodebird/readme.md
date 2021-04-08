@@ -226,11 +226,11 @@ npm i sequelize sequelize-cli mysql2
 
 - mysql2: node와 mysql을 연결해주는 드라이버(이 모듈 자체가 mysql은 아니다)
 
-- 시퀄라이즈 초기화를 시킨다.
-
 ```command
 npx sequelize init
 ```
+
+- 시퀄라이즈 초기화를 시킨다.
 
 - 파일이 생성되면 config/config.json 파일의 정보를 맞게 수정해준다.
 - models/index.js 파일 내용을 수정해준다.
@@ -296,11 +296,11 @@ Comment.associate = (db) => {
 
 ```js
 Post.associate = (db) => {
-  db.Post.belongsToMany(db.Hashtag);
+  db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
 };
 
 Hashtag.associate = (db) => {
-  db.Hashtag.belongsToMany(db.Post);
+  db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
 };
 ```
 
@@ -345,8 +345,8 @@ Post.associate = (db) => {
 
 ```js
 User.associate = (db) => {
-  db.User.belongsToMany(db.User, { throught: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });
-  db.User.belongsToMany(db.User, { throught: 'Follow', as: 'Followings', foreignKey: 'FollowerId' });
+  db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });
+  db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId' });
 };
 ```
 
@@ -363,6 +363,154 @@ Post.associate = (db) => {
 
 - Post 모델 컬럼에 RetweetId가 생성된다.
 
+```command
+npx sequelize db:create
+```
+
+- config 내용대로 db 생성
+
+- 소스를 바꿀 때마다 반영되도록 자동화가 필요하다.
+- package.json 에 scripts 로 nodemon app 설정
+
+```command
+npm i -D nodemon
+npm run dev
+```
+
+- 비밀번호 암호화
+
+```command
+npm i bcrypt
+```
+
+- routes/user.js
+
+```js
+const bcrypt = require('bcrypt');
+
+router.post('/', async (req, res) => {
+  try {
+    const exUser = await User.findOne({
+      where: { email: req.body.email },
+    });
+    if (exUser) {
+      return res.status(403).send('이미 사용 중인 아이디입니다.'); // 응답 실패(클라이언트)
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    await User.create({
+      email: req.body.email,
+      nickname: req.body.nickname,
+      password: hashedPassword,
+    });
+    res.status(200).send('ok'); // 응답 성공
+  } catch (error) {
+    console.error(error);
+    next(error); // 에러들이 한방에 처리된다. 에러가 발생하면 express가 알아서 브라우저에게 알려준다.
+  }
+});
+```
+
+- 요청/응답은 헤더(상태, 용량, 시간, 쿠키)와 바디(데이터)로 구성되어있다.
+- 상태 코드
+
+  - 200 성공 (201 잘 생성됨)
+  - 300 리다이렉트
+  - 400 클라이언트 에러 (401 비인증, 403 허용되지 않음, 404 주소에 해당하는 컨텐츠가 없음)
+  - 500 서버 에러
+
+- CORS 에러
+- 브라우저에서 다른 도메인 서버로 요청을 보낼 때 생긴다.
+- 서버에서 서버로 요청을 보내면 안 생김
+- proxy 방식을 통해 cors 에러를 해결하는 방법이 있다.
+  - 프록시 방식을 통해 브라우저에서 프론트 서버로, 프론트 서버에서 백엔드 서버로 보내면 에러를 해결할 수 있음
+
+```command
+npm i cors
+```
+
+- app.js
+
+```js
+app.use(
+  cors({
+    origin: true, // 'https://nodebird.com'
+  }),
+);
+```
+
+- 로그인 구현하기
+
+```command
+npm i passport passport-local
+
+```
+
+### cookie, session
+
+```command
+npm i express-session cookie-parser
+```
+
+- app.js
+
+```js
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+
+app.use(cookieParser('nodebirdsecret'));
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret: 'nodebirdsecret',
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+```
+
+- 브라우저는 누구나 접속할 수 있기 때문에 해킹에 취약함. 위험한 곳에는 랜덤한 문자열을 보냄.
+- 로그인하면 브라우저(3060)와 서버(3065)가 같은 정보를 가지고 있어야한다.
+- 백엔드 서버에서 브라우저로 인증 관련된 쿠키(랜덤한 토큰)를 보내준다.
+- 백엔드 서버 쪽에선 통째로 세션으로 저장한다.
+  - 서버 쪽에선 메모리를 아끼기 위해서 쿠키에 사용자의 전체 정보가 아닌 id만 매칭을 시킨다.
+- 브라우저는 게시글을 쓰든, 댓글을 쓰든 쿠키를 백엔드 서버로 보내주고, 백엔드 서버에서는 그 정보를 가지고 누구인지 알아낼 수 있다.
+
+### dotenv
+
+```command
+npm i dotenv
+```
+
+- config/config.js
+
+```.env
+COOKIE_SECRET=nodebirdsecret
+DB_PASSWORD=qwer1234
+```
+
+```js
+const dotenv = require('dotenv');
+dotenv.config();
+
+module.exports = {
+  development: {
+    username: 'root',
+    password: process.env.DB_PASSWORD,
+    database: 'react-nodebird',
+    host: '127.0.0.1',
+    dialect: 'mysql',
+  },
+};
+```
+
+- .env 파일은 핵심 관리자들끼리만 가지고 있어야한다. git으로 소스를 올리면 안됨
+
 ## 강좌
 
-- 리액트 노드버드 5-7
+- 리액트 노드버드 5-13
+
+## 도전 과제
+
+- passport (kakao, facebook 회원가입, 로그인 만들기)

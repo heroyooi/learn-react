@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import AppLayout from '../components/AppLayout';
+import React, { useCallback, useState, useEffect } from 'react';
 import Head from 'next/head';
+import Router from 'next/router';
 import { Form, Input, Checkbox, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import useInput from '../hooks/useInput';
 import styled from 'styled-components';
+import useInput from '../hooks/useInput';
+import AppLayout from '../components/AppLayout';
 import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const ErrorMessage = styled.div`
@@ -13,7 +14,26 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (me?.id) {
+      Router.replace('/'); // 뒤로 가기 했을 경우 이전 페이지가 없어진다.
+    }
+  }, [me?.id]);
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.push('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      // eslint-disable-next-line no-alert
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');

@@ -14,6 +14,7 @@ const Profile = () => {
       Router.push('/');
     }
   }, [me?.id]);
+
   if (!me) {
     return null;
   }
