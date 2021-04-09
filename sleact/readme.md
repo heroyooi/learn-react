@@ -447,6 +447,52 @@ return result;
 
 - 리버스 인피니티 스크롤링
 
-## 강좌
+## ch6
 
-- 슬랙클론코딩 6일차
+```tsx
+function a(b: number | number[]) {
+  if (typeof b === 'number') {
+    b.toFixed();
+  }
+  if (Array.isArray(b)) {
+    b.forEach(() => {});
+  }
+}
+```
+
+- 타입 가드 예제
+
+- 빌드
+
+```command
+npm i webpack-bundle-analyzer
+npm i @types/webpack-bundle-analyzer
+```
+
+- 웹팩 사용할 때 용량 문제를 체크하기 위해 설치해야한다.
+
+- package.json
+
+```json
+{
+  "scripts": {
+    "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack"
+  }
+}
+```
+
+```command
+npm run build
+```
+
+- 빌드 후 app.js가 500KB 이하이면 좋다.
+- 모듈명 tree-shaking 으로 검색해서 용량 줄일 수 있는 방법을 모색해본다.
+
+- 이렇게 만들어진 dist폴더와 index.html 파일을 백엔드 개발자에게 전달해주면 된다.
+- cicd로 자동화시켜준다.
+
+```command
+npm i @emotion/babel-plugin
+npm i -D eslint-plugin-react eslint-plugin-react-hooks
+npm i -D eslint-config-react-app eslint-plugin-flowtype eslint-plugin-import eslint-plugin-jsx-a11y
+```
