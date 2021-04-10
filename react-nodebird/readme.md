@@ -507,9 +507,54 @@ module.exports = {
 
 - .env 파일은 핵심 관리자들끼리만 가지고 있어야한다. git으로 소스를 올리면 안됨
 
+### 에러 처리 미들웨어
+
+- app.js (직접 에러 처리 미들웨어를 작성하고 싶을 때)
+
+```js
+app.use((err, req, res, next) => {});
+app.listen(3065, () => {
+  console.log('서버 실행 중!');
+});
+```
+
+- 브라우저랑 백엔드 서버랑 도메인이 다르면 cors 문제가 생긴다.
+- 도메인이 다르면 쿠키도 전달이 안된다. 백엔드 서버는 그 요청을 누가 보냈는지 알 수가 없다.
+- 로그인을 했는데, 로그인 하라고 에러 메세지가 뜨면 쿠키 전달이 안되고 있는 것을 의심해 봐야한다.
+
+- back/app.js
+
+```js
+app.use(
+  cors({
+    origin: true, // 'https://nodebird.com'
+    credentials: true,
+  }),
+);
+```
+
+- front/sagas/post.js
+
+```js
+function addCommentAPI(data) {
+  return axios.post(`/post/${data.postId}/comment`, data, {
+    withCredentials: true,
+  });
+}
+```
+
+- 이렇게 백엔드와 프론트엔드에서 credentials: true 설정을 해줘야 쿠키가 잘 전달된다.
+- 그런데 매번 요청할 때마다 같은 설정을 넣어주면 중복이 발생하므로 다음과 같이 한다.
+
+- front/sagas/index.js
+
+```js
+axios.defaults.withCredentials = true;
+```
+
 ## 강좌
 
-- 리액트 노드버드 5-13
+- 리액트 노드버드 5-17
 
 ## 도전 과제
 

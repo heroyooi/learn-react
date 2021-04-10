@@ -2,11 +2,47 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { User, Post } = require('../models');
-
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
+// GET /user
+router.get('/', async (req, res, next) => {
+  try {
+    if (req.user) {
+      const fullUserWithPassword = await User.findOne({
+        where: { id: req.user.id },
+        attributes: {
+          exclude: ['password'],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followings',
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id'],
+          },
+        ],
+      });
+      res.status(200).json(fullUserWithPassword);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 // POST /user/login
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       console.error(err);
@@ -22,21 +58,23 @@ router.post('/login', (req, res, next) => {
       }
       const fullUserWithPassword = await User.findOne({
         where: { id: user.id },
-        // attributes: ['id', 'nickname', 'email'],
         attributes: {
           exclude: ['password'],
         },
         include: [
           {
             model: Post,
+            attributes: ['id'],
           },
           {
             model: User,
             as: 'Followings',
+            attributes: ['id'],
           },
           {
             model: User,
             as: 'Followers',
+            attributes: ['id'],
           },
         ],
       });
@@ -46,7 +84,7 @@ router.post('/login', (req, res, next) => {
 });
 
 // POST /user/
-router.post('/', async (req, res) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       where: {
@@ -70,7 +108,7 @@ router.post('/', async (req, res) => {
 });
 
 // POST /user/logout
-router.post('/user/logout', (req, res) => {
+router.post('/logout', isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
   res.send('ok');

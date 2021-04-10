@@ -23,7 +23,7 @@ passportConfig();
 app.use(
   cors({
     origin: true, // 'https://nodebird.com'
-    // credentials: false,
+    credentials: true,
   }),
 );
 // 프론트에서 axios.post로 보낸 데이터를 해석해서 req.body에 넣어준다.
