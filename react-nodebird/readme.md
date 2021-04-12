@@ -334,8 +334,10 @@ User.associate = (db) => {
 
 ```js
 Post.associate = (db) => {
-  db.Post.belongsTo(db.User);
-  db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });
+  db.Post.belongsTo(db.User); // post.addUser, post.getUser, post.setUser (belongsTo 단수)
+  db.Post.hasMany(db.Image); // post.addImages (hasMany 복수)
+  db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' }); // post.addLikers, post.removeLikers (belongsToMany 복수)
+  db.Post.belongsTo(db.Post, { as: 'Retweet' }); // post.addRetweet
 };
 ```
 
@@ -552,9 +554,15 @@ function addCommentAPI(data) {
 axios.defaults.withCredentials = true;
 ```
 
+- 서버에 기록하기 위한 모듈 설치
+
+```command
+npm i morgan
+```
+
 ## 강좌
 
-- 리액트 노드버드 5-17
+- 리액트 노드버드 5-20
 
 ## 도전 과제
 
