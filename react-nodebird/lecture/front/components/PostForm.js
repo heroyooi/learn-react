@@ -23,9 +23,9 @@ const PostForm = () => {
     }
     const formData = new FormData();
     imagePaths.forEach((p) => {
-      formData.append('image', p);
+      formData.append('image', p); // req.body.image
     });
-    formData.append('content', text);
+    formData.append('content', text); // req.body.content
     return dispatch({
       type: ADD_POST_REQUEST,
       data: formData,
