@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import useInput from '../hooks/useInput';
-import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reducers/post';
+import { UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reducers/post';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -15,10 +15,8 @@ const PostForm = () => {
     }
   }, [addPostDone]);
 
-  // eslint-disable-next-line consistent-return
   const onSubmit = useCallback(() => {
     if (!text || !text.trim()) {
-      // eslint-disable-next-line no-alert
       return alert('게시글을 작성하세요.');
     }
     const formData = new FormData();

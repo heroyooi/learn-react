@@ -560,6 +560,8 @@ axios.defaults.withCredentials = true;
 npm i morgan
 ```
 
+### multipart
+
 - multipart를 백엔드에서 처리할 수 있도록 multer를 설치
 
 ```command
@@ -604,9 +606,11 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 - upload.none(): text(json)만 있다.
 - upload.fills: file 인풋이 2개 이상 있을 때
 
+- 해쉬태그를 추출하기 위한 정규표현식
+
 ## 강좌
 
-- 리액트 노드버드 5-23
+- 리액트 노드버드 5-25
 
 ## 도전 과제
 
