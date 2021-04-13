@@ -610,7 +610,7 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 
 ## 강좌
 
-- 리액트 노드버드 5-25
+- 리액트 노드버드 6-1
 
 ## 도전 과제
 
