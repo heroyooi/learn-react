@@ -560,6 +560,50 @@ axios.defaults.withCredentials = true;
 npm i morgan
 ```
 
+- multipart를 백엔드에서 처리할 수 있도록 multer를 설치
+
+```command
+npm i multer
+```
+
+- 나중에는 하드디스크가 아니라 AWS의 S3같은 클라우드 서비스에 업로드를 할 것이다.
+- 실습은 잠깐 하드디스크에다가 하지만 나중엔 AWS의 S3 서비스로 대체할 것이다.
+- 이미지나 동영상은 서버에 매우 부담을 주기 때문에, 왠만하면 프론트에서 클라우드로 바로 올리는 것으로 하는 것이 좋다.
+
+- front/components/PostForm.js
+
+```js
+const PostForm = () => {
+  return <input type="file" name="image" multiple hidden ref={imageInput} />;
+};
+```
+
+- back/app.js
+
+```js
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads');
+    },
+    filename(req, file, done) {
+      // 제로초.png
+      const ext = path.extname(file.originalname); // 확장자 추출(.png)
+      const basename = path.basename(file.originalname, ext); // 제로초
+      done(null, basename + new Date().getTime() + ext); // 제로초15184712891.png
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+
+router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {});
+```
+
+- upload.array: 이미지를 여러장
+- upload.single: 이미지를 한장
+- upload.none(): text(json)만 있다.
+- upload.fills: file 인풋이 2개 이상 있을 때
+
 ## 강좌
 
 - 리액트 노드버드 5-21

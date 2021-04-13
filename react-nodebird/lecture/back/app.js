@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
+
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
@@ -28,8 +30,9 @@ app.use(
     credentials: true,
   }),
 );
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 // 프론트에서 axios.post로 보낸 데이터를 해석해서 req.body에 넣어준다.
-app.use(express.json()); // 프론트에서 json 형식으로 데이터를 보냈을 때
+app.use(express.json()); // 프론트에서 axios로 json 형식으로 데이터를 보냈을 때
 app.use(express.urlencoded({ extended: true })); // 폼 submit을 했을 때 urlencoded 방식으로 데이터를 넘어왔을 때
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
