@@ -608,9 +608,73 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 
 - 해쉬태그를 추출하기 위한 정규표현식
 
+## ch6
+
+```command
+npm rm next-redux-saga
+```
+
+- next-redux-saga 가 필요 없어 졌으므로 삭제
+
+-
+
+- front/pages/index.js
+
+```js
+import { END } from 'redux-saga';
+import { LOAD_POSTS_REQUEST } from '../reducers/post';
+import { LOAD_USER_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  context.store.dispatch({
+    type: LOAD_USER_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
+```
+
+- CSR 방식이 아닌 SSR 처리
+
+## SSR시 쿠키 공유
+
+- 기존에 credentials, cors 문제 때문에 쿠키 전달이 안됐었음
+- getServerSideProps는 프론트 서버에서 실행됨
+- 원래 CSR방식 에서는 브라우저가 직접 쿠키를 담아서 백엔드로 보내줌
+- SSR의 주체는 프론트 서버에서 백엔드 서버로 보낸다.(브라우저는 아예 개입 조자 못함)
+
+- front/pages/index.js
+
+```js
+import axios from 'axios';
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = cookie;
+}
+```
+
+- SSR시 쿠키를 인식할 수 있도록 해준다. 그런데 이렇게 하면 문제가 있다. 서버는 AWS에 하나밖에 없고, 하나밖에 없는 서버에서 axios.defaults 값으로 내 쿠키 정보를 넣어주면 다른 사람이 접근해도 내 정보를 참조하게 된다.
+
+```js
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+}
+```
+
+- 이렇게 해주면 내 쿠키 정보가 공유되는 현상을 방지할 수 있다.
+
 ## 강좌
 
-- 리액트 노드버드 6-1
+- 리액트 노드버드 6-3
 
 ## 도전 과제
 
