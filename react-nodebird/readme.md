@@ -680,6 +680,49 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 - 예) 블로그 게시글, 뉴스(빈번하게 수정되지 않는)
 - Next에서 빌드해줄 때 정적인 HTML 파일로 뽑아준다.
 
+### getStaticProps
+
+- 다이나믹 라우팅일때 사용한다.
+- 글 갯수에 제한이 있을 때 사용할 수 있다.
+
+```js
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { id: '2' } }, { params: { id: '3' } }],
+    fallback: false,
+  };
+}
+
+export const getStaticProps = wrapper.getStaticProps(async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POST_REQUEST,
+    data: context.params.id,
+  });
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
+```
+
+- 만약 fallback이 true로 되어있으면 CSR 방식으로 다음과 같은 조치가 필요하다.
+
+```js
+const Post = () => {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>로딩중...</div>;
+  }
+};
+```
+
 ### Next 바벨 설정
 
 - 설치 및 작성
@@ -706,11 +749,49 @@ npm i babel-plugin-styled-components
 
 - axios 요청 시 한글 처리
 
+- front/sagas/post.js (보내는 쪽)
+
 ```js
 function loadHashtagPostsAPI(data, lastId) {
   return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
 }
 ```
+
+- encodeURIComponent로 브라우저에서 한글을 인식할 수 있도록 만든다.
+
+- back/routes/hashtag.js (받는 쪽)
+
+```js
+router.get('/:hashtag', async (req, res, next) => {
+  try {
+    const where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+    }
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: Hashtag,
+          where: { name: decodeURIComponent(req.params.hashtag) },
+        },
+      ],
+    });
+  }
+});
+```
+
+- decodeURIComponent로 인코드된 텍스트를 해석한다.
+
+### SWR
+
+```command
+npm i swr
+```
+
+- SSR이 필요없지만, 불러와야할 데이터들에 한해서 swr을 쓰면 좋다.
 
 ## 강좌
 

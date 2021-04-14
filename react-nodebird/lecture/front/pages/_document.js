@@ -1,5 +1,5 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
 export default class MyDocument extends Document {
@@ -12,6 +12,7 @@ export default class MyDocument extends Document {
         originalRenderPage({
           enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
         });
+
       const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
@@ -22,23 +23,8 @@ export default class MyDocument extends Document {
           </>
         ),
       };
-    } catch (error) {
-      console.error(error);
     } finally {
       sheet.seal();
     }
-  }
-
-  render() {
-    return (
-      <Html>
-        <Head />
-        <body>
-          <Main />
-          <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Ces2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019" />
-          <NextScript />
-        </body>
-      </Html>
-    );
   }
 }
