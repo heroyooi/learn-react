@@ -793,9 +793,41 @@ npm i swr
 
 - SSR이 필요없지만, 불러와야할 데이터들에 한해서 swr을 쓰면 좋다.
 
+```js
+const fetcher = (url) => axios.get(url, { withCredentials: true }).then((result) => result.data);
+
+const Profile = () => {
+  const { data: followersData, error: followerError } = useSWR(
+    `http://localhost:3065/user/followers?limit=${followersLimit}`,
+    fetcher,
+  );
+  const { data: followingsData, error: followingError } = useSWR(
+    `http://localhost:3065/user/followings?limit=${followingsLimit}`,
+    fetcher,
+  );
+
+  if (followerError || followingError) {
+    console.error(followerError || followingError);
+    return <div>팔로잉/팔로워 로딩 중 에러가 발생합니다.</div>;
+  }
+
+  return (
+    <FollowList
+      header="팔로워"
+      data={followersData}
+      ionClickMore={loadMoreFollowers}
+      loading={!followersData && !followerError}
+    />
+  );
+};
+```
+
+- data, error 둘 다 없으면 로딩중
+- 하나라도 있으면 성공(data)했거나 실패(error)
+
 ## 강좌
 
-- 리액트 노드버드 6-6
+- 리액트 노드버드 6-9
 
 ## 도전 과제
 
