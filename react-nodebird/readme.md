@@ -680,9 +680,41 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 - 예) 블로그 게시글, 뉴스(빈번하게 수정되지 않는)
 - Next에서 빌드해줄 때 정적인 HTML 파일로 뽑아준다.
 
+### Next 바벨 설정
+
+- 설치 및 작성
+
+```command
+npm i babel-plugin-styled-components
+```
+
+```.babelrc
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "babel-plugin-styled-components",
+      {
+        "ssr": true,
+        "displayName": true
+      }
+    ]
+  ]
+}
+
+```
+
+- axios 요청 시 한글 처리
+
+```js
+function loadHashtagPostsAPI(data, lastId) {
+  return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
+}
+```
+
 ## 강좌
 
-- 리액트 노드버드 6-4
+- 리액트 노드버드 6-6
 
 ## 도전 과제
 

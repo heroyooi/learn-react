@@ -1,8 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const { User, Post } = require('../models');
+const { Op } = require('sequelize');
+
+const { User, Post, Image, Comment } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+
 const router = express.Router();
 
 // GET /user
@@ -80,6 +83,63 @@ router.get('/', async (req, res, next) => {
 //     next(error);
 //   }
 // });
+
+// GET /user/1/posts
+router.get('/:userId/posts', async (req, res, next) => {
+  try {
+    const where = { UserId: req.params.userId };
+    if (parseInt(req.query.lastId, 10)) {
+      // 초기 로딩이 아닐 때
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+    }
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+        {
+          model: Image,
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+              order: [['createdAt', 'DESC']],
+            },
+          ],
+        },
+        {
+          model: User, // 좋아요 누른 사람
+          as: 'Likers',
+          attributes: ['id'],
+        },
+        {
+          model: Post,
+          as: 'Retweet',
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
+      ],
+    });
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 // POST /user/login
 router.post('/login', isNotLoggedIn, (req, res, next) => {
