@@ -616,7 +616,9 @@ npm rm next-redux-saga
 
 - next-redux-saga 가 필요 없어 졌으므로 삭제
 
--
+### getServerSideProps
+
+- 접속할 때마다 접속한 상황에 따라서, 화면이 바뀌어야 하면 사용해야 한다.
 
 - front/pages/index.js
 
@@ -672,9 +674,15 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 
 - 이렇게 해주면 내 쿠키 정보가 공유되는 현상을 방지할 수 있다.
 
+### getStaticProps
+
+- 언제 접속해도 데이터가 바뀔 일이 없을 때, SSR 처리를 위해 쓴다.(쓰기가 좀 까다롭다.)
+- 예) 블로그 게시글, 뉴스(빈번하게 수정되지 않는)
+- Next에서 빌드해줄 때 정적인 HTML 파일로 뽑아준다.
+
 ## 강좌
 
-- 리액트 노드버드 6-3
+- 리액트 노드버드 6-4
 
 ## 도전 과제
 
