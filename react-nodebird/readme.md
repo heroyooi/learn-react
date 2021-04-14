@@ -825,10 +825,68 @@ const Profile = () => {
 - data, error 둘 다 없으면 로딩중
 - 하나라도 있으면 성공(data)했거나 실패(error)
 
+```command
+npm i moment
+```
+
+```js
+moment.locale('ko');
+
+const PostCard = () => {
+  return (
+    <div style={{ float: 'right' }}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>;
+  )
+};
+```
+
+- 빌드 용량 체크
+
+```command
+npm i @next/bundle-analyzer
+npm i cross-env
+```
+
+- 웹팩 및 next 설정 변경
+- next.config.js
+
+```js
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer({
+  compress: true,
+  webpack(config, { webpack }) {
+    const prod = process.env.NODE_ENV === 'production';
+    const plugins = [...config.plugins];
+    return {
+      ...config,
+      mode: prod ? 'production' : 'development',
+      devtool: prod ? 'hidden-source-map' : 'eval',
+      plugins,
+    };
+  },
+});
+```
+
+- package.json의 scripts build 수정
+
+```json
+{
+  "scripts": {
+    "build": "cross-env ANALYZE=true NODE_ENV=production next build"
+  }
+}
+```
+
+```command
+npm run build
+```
+
+- 용량 줄일 떄
+- moment locale tree shaking 이런식으로 검색해서 용량을 줄여준다.
+- concatenated라고 표시되어 있는 합쳐진 모듈들은 용량을 줄이는 것이 불가능하다.
+
 ## 강좌
 
-- 리액트 노드버드 6-9
-
-## 도전 과제
-
-- passport (kakao, facebook 회원가입, 로그인 만들기)
+- 리액트 노드버드 7-1
