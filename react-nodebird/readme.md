@@ -887,6 +887,13 @@ npm run build
 - moment locale tree shaking 이런식으로 검색해서 용량을 줄여준다.
 - concatenated라고 표시되어 있는 합쳐진 모듈들은 용량을 줄이는 것이 불가능하다.
 
+### toolkit
+
+```command
+npm i @reduxjs/toolkit
+```
+
 ## 강좌
 
 - 리액트 노드버드 7-1
+- 리덕스 툴킷 적용하기 36:30
