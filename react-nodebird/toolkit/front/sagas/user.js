@@ -36,7 +36,12 @@ import {
   REMOVE_FOLLOWER_FAILURE,
 } from '../reducers/user';
 
-function removeFollowerAPI(data) {
+import { backUrl } from '../config/config';
+
+axios.defaults.baseURL = backUrl;
+axios.defaults.withCredentials = true;
+
+export function removeFollowerAPI(data) {
   return axios.delete(`/user/follower/${data}`);
 }
 
@@ -56,7 +61,7 @@ function* removeFollower(action) {
   }
 }
 
-function loadFollowersAPI(data) {
+export function loadFollowersAPI(data) {
   return axios.get('/user/followers', data);
 }
 
@@ -76,7 +81,7 @@ function* loadFollowers(action) {
   }
 }
 
-function loadFollowingsAPI(data) {
+export function loadFollowingsAPI(data) {
   return axios.get('/user/followings', data);
 }
 
@@ -96,7 +101,7 @@ function* loadFollowings(action) {
   }
 }
 
-function changeNicknameAPI(data) {
+export function changeNicknameAPI(data) {
   return axios.patch('/user/nickname', { nickname: data });
 }
 
@@ -116,7 +121,7 @@ function* changeNickname(action) {
   }
 }
 
-function loadUserAPI(data) {
+export function loadUserAPI(data) {
   return axios.get(`/user/${data}`);
 }
 
@@ -156,7 +161,7 @@ function* loadMyInfo() {
   }
 }
 
-function logInAPI(data) {
+export function logInAPI(data) {
   return axios.post('/user/login', data);
 }
 
@@ -176,7 +181,7 @@ function* logIn(action) {
   }
 }
 
-function logOutAPI() {
+export function logOutAPI() {
   return axios.post('/user/logout');
 }
 

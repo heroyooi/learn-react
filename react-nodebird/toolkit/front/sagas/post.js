@@ -36,8 +36,12 @@ import {
   LOAD_USER_POSTS_FAILURE,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+import { backUrl } from '../config/config';
 
-function retweetAPI(data) {
+axios.defaults.baseURL = backUrl;
+axios.defaults.withCredentials = true;
+
+export function retweetAPI(data) {
   return axios.post(`/post/${data}/retweet`);
 }
 
@@ -57,7 +61,7 @@ function* retweet(action) {
   }
 }
 
-function uploadImagesAPI(data) {
+export function uploadImagesAPI(data) {
   return axios.post('/post/images', data);
 }
 
@@ -77,7 +81,7 @@ function* uploadImages(action) {
   }
 }
 
-function likePostAPI(data) {
+export function likePostAPI(data) {
   return axios.patch(`/post/${data}/like`);
 }
 
@@ -97,7 +101,7 @@ function* likePost(action) {
   }
 }
 
-function unlikePostAPI(data) {
+export function unlikePostAPI(data) {
   return axios.delete(`/post/${data}/like`);
 }
 
@@ -117,7 +121,7 @@ function* unlikePost(action) {
   }
 }
 
-function loadPostAPI(data) {
+export function loadPostAPI(data) {
   return axios.get(`/post/${data}`);
 }
 
@@ -137,7 +141,7 @@ function* loadPost(action) {
   }
 }
 
-function loadHashtagPostsAPI(data, lastId) {
+export function loadHashtagPostsAPI(data, lastId) {
   return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
 }
 
@@ -158,7 +162,7 @@ function* loadHashtagPosts(action) {
   }
 }
 
-function loadUserPostsAPI(data, lastId) {
+export function loadUserPostsAPI(data, lastId) {
   return axios.get(`/user/${data}/posts?lastId=${lastId || 0}`);
 }
 
@@ -198,7 +202,7 @@ function* loadPosts(action) {
   }
 }
 
-function addPostAPI(data) {
+export function addPostAPI(data) {
   return axios.post('/post', data);
 }
 
@@ -222,7 +226,7 @@ function* addPost(action) {
   }
 }
 
-function removePostAPI(data) {
+export function removePostAPI(data) {
   return axios.delete(`/post/${data}`);
 }
 
@@ -246,7 +250,7 @@ function* removePost(action) {
   }
 }
 
-function addCommentAPI(data) {
+export function addCommentAPI(data) {
   return axios.post(`/post/${data.postId}/comment`, data);
 }
 

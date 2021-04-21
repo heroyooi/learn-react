@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Card } from 'antd';
-import { END } from 'redux-saga';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
 import axios from 'axios';
-import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
-import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
+import { initialState as postInitialState, LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
+import { initialState as userInitialState } from '../../reducers/user';
+import { loadMyInfoAPI, loadUserAPI } from '../../sagas/user';
+import { loadUserPostsAPI } from '../../sagas/post';
 import PostCard from '../../components/PostCard';
-import wrapper from '../../store/configureStore';
 import AppLayout from '../../components/AppLayout';
+import { backUrl } from '../../config/config';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -82,27 +82,42 @@ const User = () => {
   );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+export const getServerSideProps = async (context) => {
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
+  axios.defaults.baseURL = backUrl;
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch({
-    type: LOAD_USER_POSTS_REQUEST,
-    data: context.params.id,
-  });
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_USER_REQUEST,
-    data: context.params.id,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-  console.log('getState', context.store.getState().post.mainPosts);
-  return { props: {} };
-});
+  const { id } = context.params;
+  try {
+    const results = await Promise.allSettled([
+      loadUserPostsAPI(id), loadMyInfoAPI(), loadUserAPI(id),
+    ]);
+    console.log(results);
+    const [userPosts, myInfo, user] = results.map((result) => result.value.data);
+    return { props: {
+      initialState: {
+        user: {
+          ...userInitialState,
+          me: myInfo,
+          userInfo: user,
+        },
+        post: {
+          ...postInitialState,
+          mainPosts: userPosts,
+          hasMorePosts: userPosts.length === 10,
+        },
+      },
+    } };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        error: 'error happened',
+      },
+    };
+  }
+};
 
 export default User;

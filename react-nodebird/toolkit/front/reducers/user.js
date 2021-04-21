@@ -1,4 +1,6 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
+import { logInAPI } from '../sagas/user';
 
 export const initialState = {
   loadMyInfoLoading: false, // 내 정보 가져오기 시도중
@@ -92,6 +94,33 @@ export const loginRequestAction = (data) => ({
 
 export const logoutRequestAction = () => ({
   type: LOG_OUT_REQUEST,
+});
+
+export const logIn = createAsyncThunk('user/logIn', async (data) => {
+  const response = await logInAPI(data);
+  return response.data;
+});
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => builder
+    .addCase(logIn.pending, (state, action) => {
+      state.logInLoading = true;
+      state.logInError = null;
+      state.logInDone = false;
+    })
+    .addCase(logIn.fulfilled, (state, action) => {
+      state.logInLoading = false;
+      state.me = action.payload;
+      state.logInDone = true;
+    })
+    .addCase(logIn.rejected, (state, action) => {
+      state.logInLoading = false;
+      state.logInError = action.error.message;
+    })
+    .addDefaultCase((state) => state),
 });
 
 const reducer = (state = initialState, action) =>
@@ -277,4 +306,4 @@ const reducer = (state = initialState, action) =>
     }
   });
 
-export default reducer;
+export default userSlice;

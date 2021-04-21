@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import _ from 'lodash';
+
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
@@ -8,7 +10,7 @@ import { loadPostsAPI } from '../sagas/post';
 import { loadMyInfoAPI } from '../sagas/user';
 import { backUrl } from '../config/config';
 import { initialState as userInitialState } from '../reducers/user';
-import { initialState as postInitialState } from '../reducers/post';
+import { initialState as postInitialState, loadPosts } from '../reducers/post';
 
 const Home = (props) => {
   console.log('props', props);
@@ -22,16 +24,19 @@ const Home = (props) => {
     }
   }, [retweetError]);
 
+  const lastId = mainPosts[mainPosts.length - 1]?.id;
+  const loadPostsThrottling = useCallback(() => loadPosts(lastId), [lastId]);
+
   useEffect(() => {
     function onScroll() {
       // eslint-disable-next-line max-len
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
-          const lastId = mainPosts[mainPosts.length - 1]?.id;
-          dispatch({
-            type: LOAD_POSTS_REQUEST,
-            lastId,
-          });
+          dispatch(_.throttle(loadPostsThrottling, 5000));
+          // dispatch({
+          //   type: LOAD_POSTS_REQUEST,
+          //   lastId,
+          // });
         }
       }
     }

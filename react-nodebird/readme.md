@@ -177,8 +177,7 @@ l.next(); // 위 logIn 함수의 2 실행됨
 - eslint 점검
 
 ```command
-npm i -D babel-eslint eslint-config-airbnb eslint-plugin-import
-npm i -D eslint-plugin-react-hooks eslint-plugin-jsx-a11y
+npm i -D babel-eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-react-hooks eslint-plugin-jsx-a11y
 ```
 
 - 더미데이터
@@ -891,9 +890,15 @@ npm run build
 
 ```command
 npm i @reduxjs/toolkit
+npm i lodash
 ```
+
+- sagas 에서 api 호출하는 함수들만 export 한다. (툴킷으로 전환 과정에서 그 부분만 사용된다.)
+- 대문자로 액션명을 작성하던 관습이 사라졌다. 예) ADD_POST_REQUEST
+
+- [Lodash Documentation](https://lodash.com/docs/4.17.15)
 
 ## 강좌
 
 - 리액트 노드버드 7-1
-- 리덕스 툴킷 적용하기 36:30
+- 리덕스 툴킷 적용하기 1:26:30 로그인까지 마이그레이션

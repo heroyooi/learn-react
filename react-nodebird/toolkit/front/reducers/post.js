@@ -1,4 +1,5 @@
-import produce from 'immer';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { retweetAPI } from '../sagas/post';
 
 export const initialState = {
   mainPosts: [],
@@ -80,25 +81,60 @@ export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
+export const loadPosts = createAsyncThunk('post/loadPosts', async (lastId) => {
+  const response = await retweetAPI(lastId);
+  return response.data;
+});
+
+export const retweet = createAsyncThunk('post/retweet', async (data) => {
+  const response = await retweetAPI(data);
+  return response.data;
+});
+
+const postSlice = createSlice({
+  name: 'post',
+  initialState,
+  reducers: {
+    removeImage(state, action) {
+      state.imagePaths = state.imagePaths.filter((v, i) => i !== action.payload);
+    },
+  },
+  extraReducers: (builder) => builder
+    .addCase(retweet.pending, (state, action) => {
+      state.retweetLoading = true;
+      state.retweetDone = false;
+      state.retweetError = null;
+    })
+    .addCase(retweet.fulfilled, (state, action) => {
+      state.retweetLoading = false;
+      state.retweetDone = true;
+      state.mainPosts.unshift(action.data);
+    })
+    .addCase(retweet.rejected, (state, action) => {
+      state.retweetLoading = false;
+      state.retweetError = action.error;
+    })
+    .addCase(loadPosts.pending, (state, action) => {
+      state.loadPostLoading = true;
+      state.loadPostDone = false;
+      state.loadPostError = null;
+    })
+    .addCase(loadPosts.fulfilled, (state, action) => {
+      state.loadPostLoading = false;
+      state.loadPostDone = true;
+      state.singlePost = action.payload;
+    })
+    .addCase(loadPosts.rejected, (state, action) => {
+      state.loadPostLoading = false;
+      state.loadPostError = action.error.message;
+    })
+    .addDefaultCase((state) => state),
+});
+
 const reducer = (state = initialState, action) =>
   // eslint-disable-next-line implicit-arrow-linebreak
   produce(state, (draft) => {
     switch (action.type) {
-      case RETWEET_REQUEST:
-        draft.retweetLoading = true;
-        draft.retweetDone = false;
-        draft.retweetError = null;
-        break;
-      case RETWEET_SUCCESS: {
-        draft.retweetLoading = false;
-        draft.retweetDone = true;
-        draft.mainPosts.unshift(action.data);
-        break;
-      }
-      case RETWEET_FAILURE:
-        draft.retweetLoading = false;
-        draft.retweetError = action.error;
-        break;
       case REMOVE_IMAGE:
         draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
         break;
@@ -245,4 +281,4 @@ const reducer = (state = initialState, action) =>
     }
   });
 
-export default reducer;
+export default postSlice;
