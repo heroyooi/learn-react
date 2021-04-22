@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { retweetAPI } from '../sagas/post';
+import _ from 'lodash';
+import { loadPostsAPI, retweetAPI } from '../sagas/post';
 
 export const initialState = {
   mainPosts: [],
@@ -81,10 +82,11 @@ export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
-export const loadPosts = createAsyncThunk('post/loadPosts', async (lastId) => {
-  const response = await retweetAPI(lastId);
+const loadPostsThrottle = async (lastId) => {
+  const response = await loadPostsAPI(lastId);
   return response.data;
-});
+};
+export const loadPosts = createAsyncThunk('post/loadPosts', _.throttle(loadPostsThrottle, 5000));
 
 export const retweet = createAsyncThunk('post/retweet', async (data) => {
   const response = await retweetAPI(data);
@@ -99,36 +101,38 @@ const postSlice = createSlice({
       state.imagePaths = state.imagePaths.filter((v, i) => i !== action.payload);
     },
   },
-  extraReducers: (builder) => builder
-    .addCase(retweet.pending, (state, action) => {
-      state.retweetLoading = true;
-      state.retweetDone = false;
-      state.retweetError = null;
-    })
-    .addCase(retweet.fulfilled, (state, action) => {
-      state.retweetLoading = false;
-      state.retweetDone = true;
-      state.mainPosts.unshift(action.data);
-    })
-    .addCase(retweet.rejected, (state, action) => {
-      state.retweetLoading = false;
-      state.retweetError = action.error;
-    })
-    .addCase(loadPosts.pending, (state, action) => {
-      state.loadPostLoading = true;
-      state.loadPostDone = false;
-      state.loadPostError = null;
-    })
-    .addCase(loadPosts.fulfilled, (state, action) => {
-      state.loadPostLoading = false;
-      state.loadPostDone = true;
-      state.singlePost = action.payload;
-    })
-    .addCase(loadPosts.rejected, (state, action) => {
-      state.loadPostLoading = false;
-      state.loadPostError = action.error.message;
-    })
-    .addDefaultCase((state) => state),
+  extraReducers: (builder) =>
+    builder
+      .addCase(retweet.pending, (state, action) => {
+        state.retweetLoading = true;
+        state.retweetDone = false;
+        state.retweetError = null;
+      })
+      .addCase(retweet.fulfilled, (state, action) => {
+        state.retweetLoading = false;
+        state.retweetDone = true;
+        state.mainPosts.unshift(action.data);
+      })
+      .addCase(retweet.rejected, (state, action) => {
+        state.retweetLoading = false;
+        state.retweetError = action.error;
+      })
+      .addCase(loadPosts.pending, (state, action) => {
+        state.loadPostsLoading = true;
+        state.loadPostsDone = false;
+        state.loadPostsError = null;
+      })
+      .addCase(loadPosts.fulfilled, (state, action) => {
+        state.loadPostsLoading = false;
+        state.loadPostsDone = true;
+        state.mainPosts = state.mainPosts.concat(action.payload);
+        state.hasMorePosts = action.payload.length === 10;
+      })
+      .addCase(loadPosts.rejected, (state, action) => {
+        state.loadPostsLoading = false;
+        state.loadPostsError = action.error.message;
+      })
+      .addDefaultCase((state) => state),
 });
 
 const reducer = (state = initialState, action) =>

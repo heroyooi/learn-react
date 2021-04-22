@@ -12,7 +12,7 @@ import PostCard from '../../components/PostCard';
 import AppLayout from '../../components/AppLayout';
 import { backUrl } from '../../config/config';
 
-const User = () => {
+const User = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
@@ -91,25 +91,25 @@ export const getServerSideProps = async (context) => {
   }
   const { id } = context.params;
   try {
-    const results = await Promise.allSettled([
-      loadUserPostsAPI(id), loadMyInfoAPI(), loadUserAPI(id),
-    ]);
+    const results = await Promise.allSettled([loadUserPostsAPI(id), loadMyInfoAPI(), loadUserAPI(id)]);
     console.log(results);
     const [userPosts, myInfo, user] = results.map((result) => result.value.data);
-    return { props: {
-      initialState: {
-        user: {
-          ...userInitialState,
-          me: myInfo,
-          userInfo: user,
-        },
-        post: {
-          ...postInitialState,
-          mainPosts: userPosts,
-          hasMorePosts: userPosts.length === 10,
+    return {
+      props: {
+        initialState: {
+          user: {
+            ...userInitialState,
+            me: myInfo,
+            userInfo: user,
+          },
+          post: {
+            ...postInitialState,
+            mainPosts: userPosts,
+            hasMorePosts: userPosts.length === 10,
+          },
         },
       },
-    } };
+    };
   } catch (error) {
     console.error(error);
     return {

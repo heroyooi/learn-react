@@ -1,7 +1,6 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import _ from 'lodash';
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
@@ -25,18 +24,12 @@ const Home = (props) => {
   }, [retweetError]);
 
   const lastId = mainPosts[mainPosts.length - 1]?.id;
-  const loadPostsThrottling = useCallback(() => loadPosts(lastId), [lastId]);
 
   useEffect(() => {
     function onScroll() {
-      // eslint-disable-next-line max-len
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
-          dispatch(_.throttle(loadPostsThrottling, 5000));
-          // dispatch({
-          //   type: LOAD_POSTS_REQUEST,
-          //   lastId,
-          // });
+          dispatch(loadPosts(lastId));
         }
       }
     }

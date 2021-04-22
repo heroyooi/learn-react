@@ -6,18 +6,19 @@ import 'antd/dist/antd.css';
 
 import store from '../store/configureStore';
 
-const NodeBird = ({ Component }) => (
+const NodeBird = ({ Component, pageProps }) => (
   <Provider store={store}>
     <Head>
       <meta charSet="utf-8" />
       <title>NodeBird</title>
     </Head>
-    <Component />
+    <Component {...pageProps} />
   </Provider>
 );
 
 NodeBird.propTypes = {
   Component: PropTypes.elementType.isRequired,
+  pageProps: PropTypes.any.isRequired,
 };
 
 export default NodeBird;
