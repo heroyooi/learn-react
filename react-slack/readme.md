@@ -43,6 +43,24 @@ npm i -D eslint prettier eslint-plugin-prettier eslint-config-prettier
 - 타입스크립트가 바벨에게 넘겨주고, 바벨이 최종으로 자바스크립트로 변환해준다.
 - 타입스크립트는 간단하게 정의하자면 자바스크립트에 변수, 함수의 매개변수, 함수의 반환값에 타입이 붙어있는 것이다.
 
+```command
+npm i -D webpack webpack-cli @babel/core babel-loader @babel/preset-env @babel/preset-react
+npm i -D @types/webpack @types/node @babel/preset-typescript
+npm i style-loader css-loader
+npm i cross-env ts-node
+```
+
+- 핫로딩 적용
+
+```command
+npm i -D webpack-dev-server
+npm i -D @types/webpack-dev-server
+npm i -D @pmmmwh/react-refresh-webpack-plugin react-refresh
+npm i -D fork-ts-checker-webpack-plugin
+```
+
+- fork-ts-checker-webpack-plugin: 타입스크립트 체크와 웹팩 실행을 동시에 해준다.(성능에 도움)
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -51,4 +69,4 @@ npm i -D eslint prettier eslint-plugin-prettier eslint-config-prettier
 
 ### 강좌
 
-1일차 54:00
+1일차 01:43:00
