@@ -61,6 +61,22 @@ npm i -D fork-ts-checker-webpack-plugin
 
 - fork-ts-checker-webpack-plugin: 타입스크립트 체크와 웹팩 실행을 동시에 해준다.(성능에 도움)
 
+```command
+npm i react-router react-router-dom
+npm i -D @types/react-router @types/react-router-dom
+```
+
+- 코드 스플리팅 적용 단위: 페이지 단위, SSR 처리 안되는 컴포넌트
+
+```command
+npm i @loadable/component
+npm i -D @types/loadable__component
+```
+
+```command
+npm i @emotion/react @emotion/styled
+```
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -69,4 +85,4 @@ npm i -D fork-ts-checker-webpack-plugin
 
 ### 강좌
 
-1일차 01:43:00
+2일차 00:11:55
