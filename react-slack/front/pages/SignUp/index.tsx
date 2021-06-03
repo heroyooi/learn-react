@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import useInput from '@hooks/useInput';
-import { Link, Redirect } from 'react-router-dom';
 import { Success, Form, Error, Label, Input, LinkContainer, Button, Header } from './styles';
 
 const SignUp = () => {
@@ -12,9 +13,47 @@ const SignUp = () => {
   const [signUpError, setSignUpError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
 
-  const onSubmit = useCallback(() => {}, []);
-  const onChangePassword = useCallback(() => {}, []);
-  const onChangePasswordCheck = useCallback(() => {}, []);
+  const onChangePassword = useCallback(
+    (e) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value !== passwordCheck);
+    },
+    [passwordCheck],
+  );
+
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      setPasswordCheck(e.target.value);
+      setMismatchError(e.target.value !== password);
+    },
+    [password],
+  );
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      console.log(email, nickname, password, passwordCheck);
+      if (!mismatchError && nickname) {
+        console.log('서버로 회원가입하기');
+        setSignUpError('');
+        setSignUpSuccess(false);
+        axios
+          .post('/api/users', {
+            email,
+            nickname,
+            password,
+          })
+          .then((response) => {
+            setSignUpSuccess(true);
+          })
+          .catch((error) => {
+            setSignUpError(error.response.data);
+          })
+          .finally(() => {});
+      }
+    },
+    [email, nickname, password, passwordCheck],
+  );
 
   return (
     <div id="container">

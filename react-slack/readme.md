@@ -77,6 +77,10 @@ npm i -D @types/loadable__component
 npm i @emotion/react @emotion/styled
 ```
 
+```command
+npm i axios
+```
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -85,4 +89,4 @@ npm i @emotion/react @emotion/styled
 
 ### 강좌
 
-2일차 00:11:55
+2일차 01:02:00
