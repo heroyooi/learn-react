@@ -81,6 +81,18 @@ npm i @emotion/react @emotion/styled
 npm i axios
 ```
 
+## SWR로 전역 데이터 관리
+
+- swr: 요청을 보내서 받아온 데이터를 저장(보통 GET 요청)
+
+```command
+npm i swr
+```
+
+- 쿠키는 백엔드에서 생성해서 프론트엔드 브라우저가 기억하게끔 만들어준다.
+- 프론트엔드에서는 한번 기억한 쿠키를 백엔드로 보내준다.
+- 생성은 백엔드, 보내는 것은 프론트엔드
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -89,4 +101,4 @@ npm i axios
 
 ### 강좌
 
-2일차 01:02:00
+2일차 01:38:00
