@@ -93,12 +93,48 @@ npm i swr
 - 프론트엔드에서는 한번 기억한 쿠키를 백엔드로 보내준다.
 - 생성은 백엔드, 보내는 것은 프론트엔드
 
+### SWR
+
+- revalidate(): 서버로 요청을 보내서 데이터를 다시 가져오는 것
+- mutate(data, shouldRevalidate)
+  - shouldRevalidate가 false일 경우 서버에 요청 안보내고 로컬 데이터를 그대로 수정하는 것(서버 검사 안함)
+  - shouldRevalidate가 true이면 서버에 요청을 보내 점검 한다. 바로 반영되어서 사용성이 좋아진다.(OPTIMISTIC UI)
+
+```js
+import axios from 'axios';
+import useSWR from 'swr';
+
+const fetcher = (url) => axios.get(url).then((response) => response.data);
+
+const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/users', fetcher, {
+  dedupingInterval: 2000, // 2초
+});
+```
+
+- dedupingInterval: 캐쉬 유지 기간(2초 동안 아무리 많이 호출해도 서버에는 딱 한번만 요청, 첫번째 요청 때 가져온 data로 사용)
+
+- swr은 꼭 비동기 요청과만 관련된 건 아니다. swr은 전역 데이터 관리자로 사용할 수 있다.
+
+```js
+const { data } = useSWR('hello', (key) => {
+  localStorage.setItem('data', key);
+  return localStorage.getItem('data');
+});
+```
+
+### SWR Devtools
+
+```command
+npm i @jjordy/swr-devtools
+```
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
 - 위 링크로 들어가서 첫번째 용량 적은 파일(2.4M)이 아닌 2번째 용량 큰 파일(422.4M)로 설치
 - [MySQL 커뮤니티 설치](https://thebook.io/080229/ch07/02/01-01)
+- [SWR 옵션 | 깃헙](https://github.com/vercel/swr#options)
 
 ### 강좌
 
-2일차 01:38:00
+3일차 들을 차례
