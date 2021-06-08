@@ -1,61 +1,33 @@
 import React, { useCallback } from 'react';
 import { Card, Avatar, Button } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import Link from 'next/link';
-import { logoutRequestAction } from '../reducers/user';
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../reducers/user';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
-  const { me, logOutLoading } = useSelector((state) => state.user);
   const onLogOut = useCallback(() => {
-    dispatch(logoutRequestAction());
+    dispatch(logoutAction());
   }, []);
 
   return (
     <Card
       actions={[
         <div key="twit">
-          <Link href={`/user/${me.id}`}>
-            <a>
-              짹짹
-              <br />
-              {me.Posts.length}
-            </a>
-          </Link>
+          짹짹
+          <br />0
         </div>,
         <div key="followings">
-          <Link href="/profile">
-            <a>
-              팔로잉
-              <br />
-              {me.Followings.length}
-            </a>
-          </Link>
+          팔로잉
+          <br />0
         </div>,
         <div key="followers">
-          <Link href="/profile">
-            <a>
-              팔로워
-              <br />
-              {me.Followers.length}
-            </a>
-          </Link>
+          팔로워
+          <br />0
         </div>,
       ]}
     >
-      <Card.Meta
-        avatar={
-          <Link href={`/user/${me.id}`}>
-            <a>
-              <Avatar>{me.nickname[0]}</Avatar>
-            </a>
-          </Link>
-        }
-        title={me.nickname}
-      />
-      <Button onClick={onLogOut} loading={logOutLoading}>
-        로그아웃
-      </Button>
+      <Card.Meta avatar={<Avatar>ZC</Avatar>} title="ZeroCho" />
+      <Button onClick={onLogOut}>로그아웃</Button>
     </Card>
   );
 };

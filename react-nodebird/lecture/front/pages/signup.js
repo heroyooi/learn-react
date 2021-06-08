@@ -1,44 +1,16 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import Head from 'next/head';
-import Router from 'next/router';
-import { Form, Input, Checkbox, Button } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import { END } from 'redux-saga';
-import styled from 'styled-components';
-import useInput from '../hooks/useInput';
+import React, { useCallback, useState } from 'react';
 import AppLayout from '../components/AppLayout';
-import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
+import Head from 'next/head';
+import { Form, Input, Checkbox, Button } from 'antd';
+import useInput from '../hooks/useInput';
+import styled from 'styled-components';
 
 const ErrorMessage = styled.div`
   color: red;
 `;
 
 const Signup = () => {
-  const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    if (me?.id) {
-      Router.replace('/'); // 뒤로 가기 했을 경우 이전 페이지가 없어진다.
-    }
-  }, [me?.id]);
-
-  useEffect(() => {
-    if (signUpDone) {
-      Router.push('/');
-    }
-  }, [signUpDone]);
-
-  useEffect(() => {
-    if (signUpError) {
-      // eslint-disable-next-line no-alert
-      alert(signUpError);
-    }
-  }, [signUpError]);
-
-  const [email, onChangeEmail] = useInput('');
+  const [id, onChangeId] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
   const [password, onChangePassword] = useInput('');
 
@@ -66,11 +38,7 @@ const Signup = () => {
     if (!term) {
       return setTermError(true);
     }
-    console.log(email, nickname, password);
-    dispatch({
-      type: SIGN_UP_REQUEST,
-      data: { email, password, nickname },
-    });
+    console.log(id, nickname, password);
   }, [password, passwordCheck, term]);
 
   return (
@@ -80,9 +48,9 @@ const Signup = () => {
       </Head>
       <Form onFinish={onSubmitForm}>
         <div>
-          <label htmlFor="user-email">이메일</label>
+          <label htmlFor="user-id">아이디</label>
           <br />
-          <Input name="user-email" type="email" value={email} onChange={onChangeEmail} required />
+          <Input name="user-id" value={id} onChange={onChangeId} required />
         </div>
         <div>
           <label htmlFor="user-nickname">닉네임</label>
@@ -113,7 +81,7 @@ const Signup = () => {
           {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit" loading={signUpLoading}>
+          <Button type="primary" htmlType="submit">
             가입하기
           </Button>
         </div>
@@ -121,19 +89,5 @@ const Signup = () => {
     </AppLayout>
   );
 };
-
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log(context.req.headers);
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-});
 
 export default Signup;

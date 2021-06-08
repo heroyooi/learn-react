@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
-import { loginRequestAction } from '../reducers/user';
+import { loginAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -16,28 +16,20 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const { logInLoading, logInError } = useSelector((state) => state.user);
-  const [email, onChangeEmail] = useInput('');
+  const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
-  useEffect(() => {
-    if (logInError) {
-      // eslint-disable-next-line no-alert
-      alert(logInError);
-    }
-  }, [logInError]);
-
   const onSubmitForm = useCallback(() => {
-    console.log(email, password);
-    dispatch(loginRequestAction({ email, password }));
-  }, [email, password]);
+    console.log(id, password);
+    dispatch(loginAction({ id, password }));
+  }, [id, password]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-email">이메일</label>
+        <label htmlFor="user-id">아이디</label>
         <br />
-        <Input name="user-email" type="email" value={email} onChange={onChangeEmail} required />
+        <Input name="user-id" value={id} onChange={onChangeId} required />
       </div>
       <div>
         <label htmlFor="user-password">비밀번호</label>
@@ -45,7 +37,7 @@ const LoginForm = () => {
         <Input name="user-password" value={password} onChange={onChangePassword} type="password" required />
       </div>
       <ButtonWrapper>
-        <Button type="primary" htmlType="submit" loading={logInLoading}>
+        <Button type="primary" htmlType="submit" loading={false}>
           로그인
         </Button>
         <Link href="/signup">
