@@ -10,8 +10,16 @@
 - [MySQL 커뮤니티 설치](https://thebook.io/080229/ch07/02/01-01)
 - 위 링크 보고 순서대로 설치
 
-### ORM 공부
+### 공부 계획
 
-- express + sequelize (react-nodebird)
-- nestjs + typeorm (sleact)
-- apollo + prisma (instaclone)
+- REACT-SLACK
+  - React.js + TypeScript
+  - swr
+  - nest + typeorm
+
+- REACT-NODEBIRD
+  - React.js + Next.js
+  - Redux
+  - redux-saga
+  - mysql + sequelize
+  - aws 배포
