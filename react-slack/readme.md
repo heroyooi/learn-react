@@ -99,6 +99,7 @@ npm i swr
 - mutate(data, shouldRevalidate)
   - shouldRevalidate가 false일 경우 서버에 요청 안보내고 로컬 데이터를 그대로 수정하는 것(서버 검사 안함)
   - shouldRevalidate가 true이면 서버에 요청을 보내 점검 한다. 바로 반영되어서 사용성이 좋아진다.(OPTIMISTIC UI)
+  - mutate는 성공했다는 전제하에 사용해야한다.
 
 ```js
 import axios from 'axios';
@@ -122,10 +123,19 @@ const { data } = useSWR('hello', (key) => {
 });
 ```
 
+- swr은 조건부 요청도 지원한다.
+
 ### SWR Devtools
 
 ```command
 npm i @jjordy/swr-devtools
+```
+
+## 3일차
+
+```command
+npm i gravatar @types/gravatar
+npm i react-toastify
 ```
 
 ### 참고 링크
@@ -134,7 +144,8 @@ npm i @jjordy/swr-devtools
 - 위 링크로 들어가서 첫번째 용량 적은 파일(2.4M)이 아닌 2번째 용량 큰 파일(422.4M)로 설치
 - [MySQL 커뮤니티 설치](https://thebook.io/080229/ch07/02/01-01)
 - [SWR 옵션 | 깃헙](https://github.com/vercel/swr#options)
+- [강의 자료 | 깃헙](https://github.com/ZeroCho/sleact/tree/master/alecture)
 
 ### 강좌
 
-3일차 들을 차례
+3일차 2:06:20
