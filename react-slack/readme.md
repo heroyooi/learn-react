@@ -138,6 +138,23 @@ npm i gravatar @types/gravatar
 npm i react-toastify
 ```
 
+- useCallback은 async, await를 사용할 수 있지만, useEffect안에서 사용하면 타입스크립트에서 에러가 난다.
+- useEffect안에서도 return을 사용하지 않으면 async, await를 사용할 수 있다.(근데 원칙적으로는 안되는 것이 맞다.)
+
+```js
+const a = useCallback(async () => {}, []);
+
+useEffect(() => {
+  a().then(); // 가능하다 O
+}, []);
+
+useEffect(async () => {}, []); // 기본적으로 문제가 있다. X
+```
+
+## 4일차
+
+- 함수(동사), 변수(명사) 이름을 자세하게 적으면 함수, 변수 이름 자체가 주석이 된다.
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -148,4 +165,4 @@ npm i react-toastify
 
 ### 강좌
 
-3일차 2:06:20
+4일차 34:00
