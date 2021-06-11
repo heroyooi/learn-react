@@ -30,7 +30,11 @@ const ImagesZoom = ({ images, onClose }) => {
           </Slick>
           <Indicator>
             <div>
-              {currentSlide + 1} / {images.length}
+              {currentSlide + 1}
+              {' '}
+              /
+              {' '}
+              {images.length}
             </div>
           </Indicator>
         </div>
