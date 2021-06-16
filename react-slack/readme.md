@@ -154,6 +154,13 @@ useEffect(async () => {}, []); // 기본적으로 문제가 있다. X
 ## 4일차
 
 - 함수(동사), 변수(명사) 이름을 자세하게 적으면 함수, 변수 이름 자체가 주석이 된다.
+- 하나의 컴포넌트가 하나의 역할만 하면 좋다.
+
+```command
+npm i autosize
+npm i react-mentions @types/react-mentions
+npm i -D @types/autosize
+```
 
 ### 참고 링크
 
@@ -165,4 +172,4 @@ useEffect(async () => {}, []); // 기본적으로 문제가 있다. X
 
 ### 강좌
 
-4일차 48:55
+4일차 1:25:25
