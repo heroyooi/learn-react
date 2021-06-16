@@ -172,4 +172,4 @@ npm i -D @types/autosize
 
 ### 강좌
 
-4일차 1:25:25
+5일차
