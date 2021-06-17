@@ -162,6 +162,15 @@ npm i react-mentions @types/react-mentions
 npm i -D @types/autosize
 ```
 
+## 5일차
+
+```command
+npm i socket.io-client@2
+npm i -D @types/socket.io-client@1.4.35
+```
+
+- socket.io 2버전 nest 7버전과 호환
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -172,4 +181,4 @@ npm i -D @types/autosize
 
 ### 강좌
 
-5일차
+5일차 28:00
