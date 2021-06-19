@@ -181,4 +181,4 @@ npm i -D @types/socket.io-client@1.4.35
 
 ### 강좌
 
-5일차 28:00
+5일차 43:15
