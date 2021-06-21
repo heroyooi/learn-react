@@ -171,6 +171,17 @@ npm i -D @types/socket.io-client@1.4.35
 
 - socket.io 2버전 nest 7버전과 호환
 
+```command
+npm i react-custom-scrollbars
+npm i -D @types/react-custom-scrollbars
+
+npm i dayjs
+npm i react-mentions
+npm i -D @types/react-mentions
+
+npm i regexify-string
+```
+
 ### 참고 링크
 
 - [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
@@ -181,4 +192,4 @@ npm i -D @types/socket.io-client@1.4.35
 
 ### 강좌
 
-5일차 43:15
+5일차 01:51:30
