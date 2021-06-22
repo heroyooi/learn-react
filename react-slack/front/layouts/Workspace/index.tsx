@@ -47,10 +47,11 @@ const Workspace: VFC = () => {
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+
   const { workspace } = useParams<{ workspace: string }>();
   const { data: userData, error, revalidate, mutate } = useSWR<IUser | false>('/api/users', fetcher);
   const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
-  const { revalidate: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+  const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
   const [socket, disconnect] = useSocket(workspace);
 
   useEffect(() => {

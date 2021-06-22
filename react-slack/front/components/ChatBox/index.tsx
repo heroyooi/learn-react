@@ -68,6 +68,7 @@ const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder }) 
           onKeyPress={onKeydownChat}
           placeholder={placeholder}
           inputRef={textareaRef}
+          allowSuggestionsAboveCursor
         >
           <Mention
             appendSpaceOnAdd
