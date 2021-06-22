@@ -184,12 +184,12 @@ npm i regexify-string
 
 ### 참고 링크
 
-- [MySQL Installer 다운로드](https://dev.mysql.com/downloads/installer/)
+- [MySQL Installer Download](https://dev.mysql.com/downloads/installer/)
 - 위 링크로 들어가서 첫번째 용량 적은 파일(2.4M)이 아닌 2번째 용량 큰 파일(422.4M)로 설치
 - [MySQL 커뮤니티 설치](https://thebook.io/080229/ch07/02/01-01)
-- [SWR 옵션 | 깃헙](https://github.com/vercel/swr#options)
-- [강의 자료 | 깃헙](https://github.com/ZeroCho/sleact/tree/master/alecture)
+- [SWR 옵션 | Github](https://github.com/vercel/swr#options)
+- [강의 자료 | Github](https://github.com/ZeroCho/sleact/tree/master/alecture)
 
 ### 강좌
 
-5일차 02:32:40
+5일차 02:35:38
