@@ -192,4 +192,4 @@ npm i regexify-string
 
 ### 강좌
 
-6일차
+6일차 29:30
