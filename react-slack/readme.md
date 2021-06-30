@@ -182,6 +182,15 @@ npm i -D @types/react-mentions
 npm i regexify-string
 ```
 
+## 6일차
+
+```command
+npm i webpack-bundle-analyzer
+npm i -D @types/webpack-bundle-analyzer
+```
+
+- 배포 전 용량 줄이기, tree shaking
+
 ### 참고 링크
 
 - [MySQL Installer Download](https://dev.mysql.com/downloads/installer/)
@@ -192,4 +201,4 @@ npm i regexify-string
 
 ### 강좌
 
-6일차 29:30
+6일차 1:12:55
