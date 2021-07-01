@@ -191,6 +191,29 @@ npm i -D @types/webpack-bundle-analyzer
 
 - 배포 전 용량 줄이기, tree shaking
 
+```command
+npm i @emotion/babel-plugin
+```
+
+- eslint 플러그인 설치
+
+```command
+npm i -D eslint-plugin-react
+npm i -D @typescript-eslint/parser
+npm i -D @typescript-eslint/eslint-plugin
+
+npm i -D eslint-config-react-app
+npm i -D eslint-plugin-import eslint-plugin-flowtype eslint-plugin-jsx-a11y
+```
+
+- eslint 설정
+
+```
+{
+  "extends": ["plugin:prettier/recommended", "react-app"]
+}
+```
+
 ### 참고 링크
 
 - [MySQL Installer Download](https://dev.mysql.com/downloads/installer/)
@@ -201,4 +224,4 @@ npm i -D @types/webpack-bundle-analyzer
 
 ### 강좌
 
-6일차 1:12:55
+6일차 끝, 보너스 들을 차례
