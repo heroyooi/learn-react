@@ -189,6 +189,8 @@ npm i shortid faker
 npm i immer
 ```
 
+- [react-virtualized](https://github.com/bvaughn/react-virtualized)
+
 ## ch5
 
 - 백엔드 서버 초기 세팅
@@ -904,4 +906,4 @@ npm i lodash
 
 - 리액트 노드버드 7-1
 - 리덕스 툴킷 적용하기 1:47:20
-- 복습 4-11
+- 복습 4-13
